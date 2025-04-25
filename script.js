@@ -351,6 +351,36 @@ function inicializarAplicacao() {
     elementos.filtroCategoria.addEventListener('change', () => produtosModule.filtrarProdutos());
 }
 
+// Atualização do relógio e status
+function updateClock() {
+    const now = new Date();
+    const timeDisplay = document.getElementById('header-time');
+    const storeStatus = document.getElementById('store-status');
+    
+    if (timeDisplay) {
+        timeDisplay.textContent = now.toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+    }
+
+    if (storeStatus) {
+        const hour = now.getHours();
+        const isOpen = hour >= 8 && hour < 18;
+        
+        storeStatus.className = isOpen ? 'status-open' : 'status-closed';
+        storeStatus.textContent = isOpen ? 'Aberto' : 'Fechado';
+        storeStatus.style.display = 'inline-block';
+    }
+}
+
+// Atualiza o relógio a cada segundo
+setInterval(updateClock, 1000);
+// Atualiza imediatamente ao carregar a página
+updateClock();
+
 // Inicializar a aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', inicializarAplicacao);
 

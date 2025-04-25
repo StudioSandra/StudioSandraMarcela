@@ -26,10 +26,11 @@
                 </ul>
             </nav>
             <div class="header-actions">
-                <button class="cart-btn">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
-                </button>
+                <div class="header-time">
+                    <i class="fas fa-clock"></i>
+                    <span id="header-time">15:46:40</span>
+                    <span id="store-status" class="status-open">Aberto</span>
+                </div>
                 <button class="menu-btn">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -283,28 +284,6 @@
         </div>
     </footer>
 
-    <!-- Carrinho Overlay -->
-    <div class="cart-overlay">
-        <div class="cart-content">
-            <div class="cart-header">
-                <h3>Seu Carrinho</h3>
-                <button class="close-cart">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="cart-items">
-                <!-- Itens do carrinho serão inseridos aqui dinamicamente -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <span class="total-price">R$ 0,00</span>
-                </div>
-                <button class="btn btn-primary checkout">Finalizar Compra</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Menu Mobile Overlay -->
     <div class="menu-overlay">
         <div class="menu-content">
@@ -326,4 +305,4 @@
 
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
