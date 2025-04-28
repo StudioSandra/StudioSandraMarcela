@@ -92,42 +92,75 @@
                 </div>
 
                 <div class="contact-form">
-                    <h2>Envie uma Mensagem</h2>
-                    <form id="contactForm">
+                    <div class="form-tabs">
+                        <button class="form-tab active" data-form="whatsapp">WhatsApp</button>
+                        <button class="form-tab" data-form="email">Email</button>
+                    </div>
+
+                    <!-- Formulário WhatsApp -->
+                    <form id="whatsappForm" class="form-content active">
                         <div class="form-group">
-                            <label for="name">Nome Completo</label>
-                            <input type="text" id="name" name="name" required>
+                            <label for="whatsapp-name">Nome</label>
+                            <input type="text" id="whatsapp-name" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
+                            <label for="whatsapp-phone">Telefone</label>
+                            <input type="tel" id="whatsapp-phone" name="phone" required>
                         </div>
                         <div class="form-group">
-                            <label for="phone">Telefone</label>
-                            <input type="tel" id="phone" name="phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="service">Serviço de Interesse</label>
-                            <select id="service" name="service" required>
+                            <label for="whatsapp-service">Serviço</label>
+                            <select id="whatsapp-service" name="service" required>
                                 <option value="">Selecione um serviço</option>
-                                <option value="noiva">Maquiagem para Noivas</option>
-                                <option value="festa">Maquiagem para Festas</option>
-                                <option value="ensaio">Maquiagem para Ensaios</option>
-                                <option value="curso">Curso de Maquiagem</option>
-                                <option value="design">Design de Sobrancelhas</option>
-                                <option value="limpeza">Limpeza de Pele</option>
-                                <option value="pacote">Pacote Completo</option>
+                                <option value="noiva">Maquiagem para Noivas - R$ 300</option>
+                                <option value="festa">Maquiagem para Festas - R$ 150</option>
+                                <option value="ensaio">Maquiagem para Ensaios - R$ 200</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="date">Data Desejada</label>
-                            <input type="date" id="date" name="date" required>
+                            <label for="whatsapp-date">Data Preferencial</label>
+                            <input type="date" id="whatsapp-date" name="date" required>
                         </div>
                         <div class="form-group">
-                            <label for="message">Mensagem</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
+                            <label for="whatsapp-message">Mensagem</label>
+                            <textarea id="whatsapp-message" name="message" rows="4"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
+                        <button type="submit" class="btn btn-primary">Enviar Mensagem via WhatsApp</button>
+                    </form>
+
+                    <!-- Formulário Email -->
+                    <form id="emailForm" class="form-content" action="https://formspree.io/f/movdvwlo" method="POST">
+                        <div class="form-group">
+                            <label for="email-name">Nome</label>
+                            <input type="text" id="email-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-email">Email</label>
+                            <input type="email" id="email-email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-phone">Telefone</label>
+                            <input type="tel" id="email-phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-service">Serviço</label>
+                            <select id="email-service" name="service" required>
+                                <option value="">Selecione um serviço</option>
+                                <option value="noiva">Maquiagem para Noivas - R$ 300</option>
+                                <option value="festa">Maquiagem para Festas - R$ 150</option>
+                                <option value="ensaio">Maquiagem para Ensaios - R$ 200</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-date">Data Preferencial</label>
+                            <input type="date" id="email-date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-message">Mensagem</label>
+                            <textarea id="email-message" name="message" rows="4"></textarea>
+                        </div>
+                        <input type="hidden" name="_next" value="https://studiosandramarcela.com.br/obrigado.html">
+                        <input type="hidden" name="_subject" value="Novo agendamento do site">
+                        <button type="submit" class="btn btn-primary">Enviar Mensagem via Email</button>
                     </form>
                 </div>
             </div>
