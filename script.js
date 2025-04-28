@@ -263,6 +263,182 @@ const temaModule = {
     }
 };
 
+// Configuração do WhatsApp
+const whatsappConfig = {
+    phoneNumber: '5511999999999', // Substitua pelo número correto
+    messages: {
+        noiva: 'Maquiagem para Noivas - R$ 350,00',
+        festa: 'Maquiagem para Festas - R$ 150,00',
+        ensaio: 'Maquiagem para Ensaios - R$ 180,00',
+        curso: 'Curso de Maquiagem - R$ 800,00',
+        sobrancelha: 'Design de Sobrancelhas - R$ 70,00',
+        limpeza: 'Limpeza de Pele - R$ 120,00'
+    }
+};
+
+// Função para formatar a data
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+}
+
+// Função para enviar mensagem para o WhatsApp
+function sendToWhatsApp(event) {
+    event.preventDefault();
+
+    // Pegar valores do formulário
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const service = document.getElementById('service');
+    const serviceName = service.options[service.selectedIndex].text;
+    const date = formatDate(document.getElementById('date').value);
+    const time = document.getElementById('time').value;
+    const message = document.getElementById('message').value;
+
+    // Construir a mensagem
+    const whatsappMessage = `Olá! 👋
+
+*Novo Agendamento*
+Nome: ${name}
+Email: ${email}
+Telefone: ${phone}
+Serviço: ${serviceName}
+Data: ${date}
+Horário: ${time}
+
+${message ? `\nMensagem Adicional:\n${message}` : ''}
+
+Aguardo confirmação! 😊`;
+
+    // Codificar a mensagem para URL
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+
+    // Abrir WhatsApp
+    window.open(`https://wa.me/${whatsappConfig.phoneNumber}?text=${encodedMessage}`, '_blank');
+    return false;
+}
+
+// Função para abrir WhatsApp
+function openWhatsApp(serviceType) {
+    const message = whatsappConfig.messages[serviceType];
+    if (message) {
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${whatsappConfig.phoneNumber}?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
+    }
+}
+
+// Adicionar eventos aos botões de WhatsApp
+document.addEventListener('DOMContentLoaded', function() {
+    const whatsappButtons = document.querySelectorAll('.whatsapp-btn');
+    whatsappButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const serviceType = this.dataset.service;
+            openWhatsApp(serviceType);
+        });
+    });
+});
+
+// Função para atualizar o relógio e status
+document.addEventListener('DOMContentLoaded', function() {
+    const menuBtn = document.querySelector('.menu-btn');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    const closeMenuBtn = document.querySelector('.close-menu');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
+
+    function toggleMenu() {
+        menuOverlay.classList.toggle('active');
+        document.body.style.overflow = menuOverlay.classList.contains('active') ? 'hidden' : '';
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+    closeMenuBtn.addEventListener('click', toggleMenu);
+    menuOverlay.addEventListener('click', function(e) {
+        if (e.target === menuOverlay) {
+            toggleMenu();
+        }
+    });
+
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+    });
+
+    // Atualizar horário
+    function updateTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const timeElement = document.querySelector('.time');
+        const statusElement = document.querySelector('.status');
+        
+        if (timeElement) {
+            timeElement.textContent = `${hours}:${minutes}`;
+        }
+        
+        if (statusElement) {
+            const isOpen = hours >= 9 && hours < 19;
+            statusElement.textContent = isOpen ? 'Aberto' : 'Fechado';
+            statusElement.className = `status ${isOpen ? 'open' : 'closed'}`;
+        }
+    }
+
+    updateTime();
+    setInterval(updateTime, 60000);
+
+    // Marcar link ativo no menu
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav a');
+    
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+
+    // Formulários de Contato
+    const formTabs = document.querySelectorAll('.form-tab');
+    const formContents = document.querySelectorAll('.form-content');
+    const whatsappForm = document.getElementById('whatsappForm');
+    const emailForm = document.getElementById('emailForm');
+
+    // Alternar entre formulários
+    formTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            formTabs.forEach(t => t.classList.remove('active'));
+            formContents.forEach(form => form.classList.remove('active'));
+            
+            tab.classList.add('active');
+            const formType = tab.dataset.form;
+            document.querySelector(`#${formType}Form`).classList.add('active');
+        });
+    });
+
+    // Enviar formulário WhatsApp
+    if (whatsappForm) {
+        whatsappForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('whatsapp-name').value;
+            const phone = document.getElementById('whatsapp-phone').value;
+            const service = document.getElementById('whatsapp-service').value;
+            const date = document.getElementById('whatsapp-date').value;
+            const message = document.getElementById('whatsapp-message').value;
+
+            const text = `Olá! Gostaria de agendar um horário:\n\n` +
+                        `Nome: ${name}\n` +
+                        `Telefone: ${phone}\n` +
+                        `Serviço: ${service}\n` +
+                        `Data: ${date}\n` +
+                        `Mensagem: ${message}`;
+
+            const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+    }
+});
+
 // Função principal de inicialização
 function inicializarAplicacao() {
     // Inicialização de elementos do DOM
@@ -351,279 +527,5 @@ function inicializarAplicacao() {
     elementos.filtroCategoria.addEventListener('change', () => produtosModule.filtrarProdutos());
 }
 
-// Atualização do relógio e status
-function updateClock() {
-    const now = new Date();
-    const timeDisplay = document.getElementById('header-time');
-    const storeStatus = document.getElementById('store-status');
-    
-    if (timeDisplay) {
-        timeDisplay.textContent = now.toLocaleTimeString('pt-BR', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        });
-    }
-
-    if (storeStatus) {
-        const hour = now.getHours();
-        const isOpen = hour >= 8 && hour < 18;
-        
-        storeStatus.className = isOpen ? 'status-open' : 'status-closed';
-        storeStatus.textContent = isOpen ? 'Aberto' : 'Fechado';
-        storeStatus.style.display = 'inline-block';
-    }
-}
-
-// Atualiza o relógio a cada segundo
-setInterval(updateClock, 1000);
-// Atualiza imediatamente ao carregar a página
-updateClock();
-
 // Inicializar a aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', inicializarAplicacao);
-
-// Carrinho de Compras
-const cartBtn = document.querySelector('.cart-btn');
-const cartOverlay = document.querySelector('.cart-overlay');
-const closeCart = document.querySelector('.close-cart');
-const cartItems = document.querySelector('.cart-items');
-const cartTotal = document.querySelector('.total-price');
-const addToCartBtns = document.querySelectorAll('.add-to-cart');
-
-let cart = [];
-
-// Abrir/Fechar Carrinho
-cartBtn.addEventListener('click', () => {
-    cartOverlay.style.display = 'block';
-});
-
-closeCart.addEventListener('click', () => {
-    cartOverlay.style.display = 'none';
-});
-
-// Adicionar ao Carrinho
-addToCartBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const productCard = e.target.closest('.product-card');
-        const productName = productCard.querySelector('h3').textContent;
-        const productPrice = productCard.querySelector('.product-price').textContent;
-        const productImage = productCard.querySelector('img').src;
-
-        const item = {
-            name: productName,
-            price: productPrice,
-            image: productImage,
-            quantity: 1
-        };
-
-        cart.push(item);
-        updateCart();
-        updateCartCount();
-    });
-});
-
-// Atualizar Carrinho
-function updateCart() {
-    cartItems.innerHTML = '';
-    let total = 0;
-
-    cart.forEach((item, index) => {
-        const cartItem = document.createElement('div');
-        cartItem.classList.add('cart-item');
-        cartItem.innerHTML = `
-            <div class="cart-item-image">
-                <img src="${item.image}" alt="${item.name}">
-            </div>
-            <div class="cart-item-info">
-                <h4>${item.name}</h4>
-                <p>${item.price}</p>
-                <div class="cart-item-quantity">
-                    <button class="quantity-btn minus" data-index="${index}">-</button>
-                    <span>${item.quantity}</span>
-                    <button class="quantity-btn plus" data-index="${index}">+</button>
-                </div>
-            </div>
-            <button class="remove-item" data-index="${index}">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-
-        cartItems.appendChild(cartItem);
-        total += parseFloat(item.price.replace('R$ ', '').replace(',', '.')) * item.quantity;
-    });
-
-    cartTotal.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-
-    // Adicionar eventos aos botões de quantidade
-    document.querySelectorAll('.quantity-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = e.target.dataset.index;
-            const isPlus = e.target.classList.contains('plus');
-            
-            if (isPlus) {
-                cart[index].quantity++;
-            } else {
-                if (cart[index].quantity > 1) {
-                    cart[index].quantity--;
-                }
-            }
-            
-            updateCart();
-            updateCartCount();
-        });
-    });
-
-    // Adicionar eventos aos botões de remover
-    document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = e.target.closest('.remove-item').dataset.index;
-            cart.splice(index, 1);
-            updateCart();
-            updateCartCount();
-        });
-    });
-}
-
-// Atualizar Contador do Carrinho
-function updateCartCount() {
-    const count = cart.reduce((total, item) => total + item.quantity, 0);
-    document.querySelector('.cart-count').textContent = count;
-}
-
-// Menu Mobile
-const menuBtn = document.querySelector('.menu-btn');
-const menuOverlay = document.querySelector('.menu-overlay');
-const closeMenu = document.querySelector('.close-menu');
-
-menuBtn.addEventListener('click', () => {
-    menuOverlay.style.display = 'block';
-});
-
-closeMenu.addEventListener('click', () => {
-    menuOverlay.style.display = 'none';
-});
-
-// Fechar Overlays ao clicar fora
-window.addEventListener('click', (e) => {
-    if (e.target === cartOverlay) {
-        cartOverlay.style.display = 'none';
-    }
-    if (e.target === menuOverlay) {
-        menuOverlay.style.display = 'none';
-    }
-});
-
-// Filtros de Produtos
-const filterBtns = document.querySelectorAll('.filter-btn');
-const productCards = document.querySelectorAll('.product-card');
-
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Remover classe active de todos os botões
-        filterBtns.forEach(b => b.classList.remove('active'));
-        // Adicionar classe active ao botão clicado
-        btn.classList.add('active');
-
-        const filter = btn.dataset.filter;
-
-        productCards.forEach(card => {
-            if (filter === 'all' || card.dataset.category === filter) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    });
-});
-
-// Filtros de Portfólio
-const portfolioFilterBtns = document.querySelectorAll('.portfolio-filters .filter-btn');
-const portfolioItems = document.querySelectorAll('.portfolio-item');
-
-portfolioFilterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Remover classe active de todos os botões
-        portfolioFilterBtns.forEach(b => b.classList.remove('active'));
-        // Adicionar classe active ao botão clicado
-        btn.classList.add('active');
-
-        const filter = btn.dataset.filter;
-
-        portfolioItems.forEach(item => {
-            if (filter === 'all' || item.dataset.category === filter) {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    });
-});
-
-// Smooth Scroll para links internos
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// Newsletter
-const newsletterForm = document.querySelector('.newsletter-form');
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = newsletterForm.querySelector('input[type="email"]').value;
-        // Aqui você pode adicionar a lógica para enviar o email para seu backend
-        alert('Obrigada por se cadastrar! Você receberá nossas novidades em breve.');
-        newsletterForm.reset();
-    });
-}
-
-// Formulário de Contato
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Coletar dados do formulário
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            service: document.getElementById('service').value,
-            date: document.getElementById('date').value,
-            message: document.getElementById('message').value
-        };
-
-        try {
-            // Enviar dados para a API
-            const response = await fetch('http://localhost:3000/api/send-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
-                contactForm.reset();
-            } else {
-                alert('Erro ao enviar mensagem. Por favor, tente novamente mais tarde.');
-            }
-        } catch (error) {
-            console.error('Erro:', error);
-            alert('Erro ao enviar mensagem. Por favor, tente novamente mais tarde.');
-        }
-    });
-} 
